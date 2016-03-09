@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+  <title>Table</title>
+  <style>
+    .carousel {
+      position: relative;
+      width: 100%;
+    }
+
+    .carousel-inner .item {
+      width: 100%;
+      background-color: #fff;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .carousel-inner .active {
+      z-index: 3;
+    }
+
+    a.left,
+    a.right {
+      top: 30%;
+      position: absolute;
+      cursor: pointer;
+      z-index: 4;
+      visibility: hidden;
+      -webkit-transition: all .5s;
+      /* Safari */
+      transition: all .5s;
+    }
+
+    a.left > img,
+    a.right > img {
+      width: 30px;
+      height: 50px;
+    }
+
+    .left {
+      left: 0;
+      /*left: -10%;*/
+    }
+
+    .right {
+      right: 0;
+      /*right: -9%;*/
+    }
+
+    .carousel:hover a.left,
+    .carousel:hover a.right {
+      visibility: visible;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="carousel">
+    <div class="carousel-inner">
+      <div class="item active">
+        <div>
+          <!-- <img alt="Shana Poetker" src="/sites/default/files/teacher1.jpg" /> -->
+        </div>
+
+        <div style="padding-top: 5px;">
+          <p class="nametestimonial">Shana</p>
+
+          <p class="locationtestimonial">Lawrencer</p>
+        </div>
+
+        <p style="clear:both !important;margin-top: 2em;">From my work with the learning&nbsp;map&nbsp;&nbsp;model, the goal of filling in those gaps.</p>
+      </div>
+
+      <div class="item">
+        <div>
+          <!-- <img alt="Shana Poetker" src="/sites/default/files/teacher1.jpg" /> -->
+        </div>
+
+        <div style="padding-top: 5px;">
+          <p class="nametestimonial">Poettker</p>
+
+          <p class="locationtestimonial"> teacher</p>
+        </div>
+
+        <p style="clear:both !important;margin-top: 2em;">started to think about the prerequisite skills students need to master the concepts I want to teach. I think a huge takeaway from my experience with the maps will be thinking about learning gaps as missing map nodes. Now, I feel I have better
+          tools to help identify learning gaps with the goal of filling in those gaps.</p>
+      </div>
+    </div>
+
+    <a class="left">
+      <img src="http://staging.enhancedlearningmaps.org/sites/default/files/left-arrow.png" alt="left">
+    </a>
+    <a class="right">
+      <img src="http://staging.enhancedlearningmaps.org/sites/default/files/right-arrow.png" alt="right">
+    </a>
+  </div>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+  (function($) {
+
+    var $height = [];
+    var timeflag = '';
+    $('.carousel-inner').find('.item').each(function() {
+      $height.push($(this).height());
+    });
+    var $max_height = Math.max.apply(Math, $height);
+    // alert($max_height);
+    $('.carousel-inner').height($max_height);
+    $('.carousel-inner').find('.item').each(function() {
+      $(this).height($max_height);
+    });
+
+    function cycleImages(orien) {
+      $('.carousel-inner').each(function() {
+        var $active = $(this).find('.active');
+
+        if (orien == 'right') {
+          var $next = ($(this).find('.active').next().length > 0) ? $(this).find('.active').next() : $(this).find('.item:first');
+          $next.css('z-index', 2); //move the next image up the pile
+          $active.fadeOut(1000, function() { //fade out the top image
+            $active.css('z-index', 1).show().removeClass('active'); //reset the z-index and unhide the image
+            $next.css('z-index', 3).addClass('active'); //make the next image the top one
+          });
+        } else {
+          var $prev = ($(this).find('.active').prev().length > 0) ? $(this).find('.active').prev() : $(this).find('.item:last');
+          $prev.css('z-index', 2); //move the next image up the pile
+          $active.fadeOut(1000, function() { //fade out the top image
+            $active.css('z-index', 1).show().removeClass('active'); //reset the z-index and unhide the image
+            $prev.css('z-index', 3).addClass('active'); //make the next image the top one
+          });
+        }
+
+      });
+    }
+
+    function autoMove() {
+      timeflag = setTimeout(function() {
+        cycleImages('right');
+        autoMove();
+      }, 5000);
+    }
+
+    autoMove();
+
+    $('.carousel').bind('mouseover', function(){
+      clearTimeout(timeflag);
+    });
+
+    $('.carousel').bind('mouseout', function(){
+      autoMove();
+    });
+
+    $('.left').bind('click', function(e) {
+      e.preventDefault();
+      cycleImages();
+    });
+
+    $('.right').bind('click', function(e) {
+      e.preventDefault();
+      cycleImages('right');
+    });
+
+  })(jQuery);
+</script>
